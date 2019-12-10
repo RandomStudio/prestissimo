@@ -1,4 +1,4 @@
-import { MidiMessageEvent, MessageTypeName } from "../types";
+import { MidiMessageEvent, MessageTypeName } from "./types";
 import { messageToBytes } from ".";
 
 describe("messages to bytes", () => {

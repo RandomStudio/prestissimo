@@ -10,8 +10,8 @@ import {
   ControlChangeMessage,
   NoteMessage,
   MidiDevice
-} from "../types";
-import { findMatch, logger, getMessageType, isExtendedType } from "..";
+} from "./types";
+import { findMatch, logger, getMessageType, isExtendedType } from ".";
 
 export class Output extends EventEmitter {
   private midi: typeof midi.Input;

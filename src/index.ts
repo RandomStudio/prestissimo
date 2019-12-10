@@ -24,8 +24,8 @@ const config: Config = parse(rc("prestissimo", defaults));
 export const logger = getLogger("prestissimo");
 logger.level = config.loglevel;
 
-export * from "./Input";
-export * from "./Output";
+export * from "./input";
+export * from "./output";
 
 export const findMatch = (
   midiInterface: typeof midi.Input | typeof midi.Output,

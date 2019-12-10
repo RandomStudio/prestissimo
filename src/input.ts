@@ -5,8 +5,8 @@ import {
   RawMessage,
   MidiMessageEvent,
   MidiDevice
-} from "../types";
-import { findMatch, logger, getMessageType, getMessageEvent } from "..";
+} from "./types";
+import { findMatch, logger, getMessageType, getMessageEvent } from ".";
 
 export class Input extends EventEmitter {
   private midi: typeof midi.Input;

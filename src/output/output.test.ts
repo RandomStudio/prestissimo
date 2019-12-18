@@ -1,5 +1,18 @@
-import { MidiMessageEvent, MessageTypeName } from "./types";
-import { messageToBytes } from ".";
+import { MidiMessageEvent, MessageTypeName } from "../types";
+import { messageToBytes } from "./Output";
+import { OutputVirtual } from "./OutputVirtual";
+
+describe("virtual outputs", () => {
+  test("create virtual output", () => {
+    const output = new OutputVirtual("virtualOutputDevice");
+
+    expect(output).toBeDefined();
+    expect(output.getName()).toBe("virtualOutputDevice");
+    expect(output.getPort()).toBeUndefined();
+
+    output.close();
+  });
+});
 
 describe("messages to bytes", () => {
   test("noteOn middle C", () => {

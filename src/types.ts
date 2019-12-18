@@ -1,9 +1,9 @@
 export interface MidiDevice {
   name: string;
-  port: number;
+  port?: number;
 }
 
-export interface DeviceFilter {
+export interface DeviceDescription {
   name?: string;
   port?: number;
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"InputDevice.js","sourceRoot":"","sources":["../../src/input/InputDevice.ts"],"names":[],"mappings":";;AAAA,mCAAgC;AAGhC,MAAa,WAAY,SAAQ,aAAK;IACpC,YAAY,MAAyB;QACnC,MAAM,EAAE,IAAI,EAAE,IAAI,EAAE,GAAG,MAAM,CAAC;QAC9B,KAAK,CAAC,EAAE,IAAI,EAAE,IAAI,EAAE,EAAE,KAAK,CAAC,CAAC;IAC/B,CAAC;CACF;AALD,kCAKC"}

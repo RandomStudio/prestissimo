@@ -1,7 +1,4 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,16 +6,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const log4js_1 = require("log4js");
 const rc_1 = __importDefault(require("rc"));
 const parse_strings_in_object_1 = __importDefault(require("parse-strings-in-object"));
+// Internal modules
 const types_1 = require("./types");
+// Config
 const defaults_1 = __importDefault(require("./config/defaults"));
+const events_1 = require("events");
 const config = parse_strings_in_object_1.default(rc_1.default("prestissimo", defaults_1.default));
 exports.logger = log4js_1.getLogger("prestissimo");
 exports.logger.level = config.loglevel;
-__export(require("./Input"));
-__export(require("./Output"));
-exports.findMatch = (midiInterface, filter) => filter.name !== undefined
-    ? exports.matchByName(midiInterface, filter.name)
-    : exports.listPorts(midiInterface)[filter.port];
+// export * from "./input/Input";
+// export * from "./output";
+class BaseMidiDevice extends events_1.EventEmitter {
+    constructor() {
+        super();
+        this.getName = () => this.device.name;
+        this.getPort = () => this.device.port;
+        this.getDevice = () => this.device;
+        this.close = () => {
+            exports.logger.warn("closing MIDI input device");
+            this.midi.close();
+        };
+    }
+}
+exports.BaseMidiDevice = BaseMidiDevice;
+exports.findMatch = (midiInterface, filter) => filter.name === undefined
+    ? exports.listPorts(midiInterface)[filter.port]
+    : exports.matchByName(midiInterface, filter.name);
 exports.getMessageEvent = (messageType, bytes) => {
     switch (messageType) {
         case types_1.MessageType.noteOn:

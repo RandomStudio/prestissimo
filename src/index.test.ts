@@ -12,7 +12,7 @@ import {
   NoteMessage,
   ControlChangeMessage,
   MidiMessageEvent,
-  DeviceFilter
+  DeviceDescription
 } from "./types";
 
 describe("convert types properly from first byte of message", () => {

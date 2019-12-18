@@ -1,29 +1,30 @@
 import midi from "midi";
 import { EventEmitter } from "events";
 import {
-  DeviceFilter,
   ValidPayloadTypes,
   MessageTypeName,
   MidiMessageEvent,
-  ExtendedType,
   MessageType,
   ControlChangeMessage,
   NoteMessage,
-  MidiDevice
-} from "./types";
-import { findMatch, logger, getMessageType, isExtendedType } from ".";
+  MidiDevice,
+  DeviceDescription
+} from "../types";
+import { findMatch, logger, BaseMidiDevice } from "../";
 
-export class Output extends EventEmitter {
-  private midi: typeof midi.Input;
-  private device: MidiDevice;
+export class Output extends BaseMidiDevice {
+  protected midi: typeof midi.Input;
+  protected device: MidiDevice;
 
-  constructor(filter: DeviceFilter, virtual = false) {
+  constructor(description: DeviceDescription, virtual = false) {
     super();
     this.midi = new midi.output();
 
-    const { name, port } = filter;
+    const { name, port } = description;
     if (virtual) {
-      // TODO: create virtual output
+      this.midi.openVirtualPort(name);
+      this.device = { name };
+      this.emitReady();
     } else {
       if (name === undefined && port === undefined) {
         throw Error(
@@ -31,7 +32,7 @@ export class Output extends EventEmitter {
         );
       }
 
-      const match = findMatch(this.midi, filter);
+      const match = findMatch(this.midi, description);
 
       if (match === undefined) {
         logger.error("could not find MIDI device matching filter", {
@@ -46,9 +47,7 @@ export class Output extends EventEmitter {
       logger.info("found matching MIDI device:", match);
 
       this.midi.openPort(match.port);
-      setTimeout(() => {
-        this.emit("ready", match);
-      });
+      this.emitReady();
     }
   }
 
@@ -62,6 +61,12 @@ export class Output extends EventEmitter {
   public getPort = () => this.device.port;
 
   public getDevice = () => this.device;
+
+  private emitReady = () => {
+    setTimeout(() => {
+      this.emit("ready", this.device);
+    });
+  };
 }
 
 export const messageToBytes = (msg: MidiMessageEvent): number[] => {

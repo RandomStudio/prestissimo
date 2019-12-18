@@ -4,36 +4,56 @@ import { getLogger } from "log4js";
 import rc from "rc";
 import parse from "parse-strings-in-object";
 
+// Internal modules
 import {
   MidiDevice,
-  DeviceFilter,
   ExtendedType,
   MessageType,
-  RawMessage,
   NoteMessage,
   ControlChangeMessage,
   MidiMessageEvent,
-  MessageTypeName
+  MessageTypeName,
+  DeviceDescription
 } from "./types";
 
+// Config
 import defaults from "./config/defaults";
 import { Config } from "./config/types";
+import { EventEmitter } from "events";
 
 const config: Config = parse(rc("prestissimo", defaults));
 
 export const logger = getLogger("prestissimo");
 logger.level = config.loglevel;
 
-export * from "./input";
-export * from "./output";
+// export * from "./input/Input";
+// export * from "./output";
+
+export class BaseMidiDevice extends EventEmitter {
+  protected midi: typeof midi.Input;
+  protected device: MidiDevice;
+
+  constructor() {
+    super();
+  }
+
+  public getName = () => this.device.name;
+  public getPort = () => this.device.port;
+  public getDevice = () => this.device;
+
+  public close = () => {
+    logger.warn("closing MIDI device", this.device);
+    this.midi.closePort();
+  };
+}
 
 export const findMatch = (
   midiInterface: typeof midi.Input | typeof midi.Output,
-  filter: DeviceFilter
+  filter: DeviceDescription
 ): MidiDevice =>
-  filter.name !== undefined
-    ? matchByName(midiInterface, filter.name)
-    : listPorts(midiInterface)[filter.port];
+  filter.name === undefined
+    ? listPorts(midiInterface)[filter.port]
+    : matchByName(midiInterface, filter.name);
 
 export const getMessageEvent = (
   messageType: MessageType | ExtendedType,

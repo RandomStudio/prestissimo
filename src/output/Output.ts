@@ -61,12 +61,6 @@ export class Output extends BaseMidiDevice {
   public getPort = () => this.device.port;
 
   public getDevice = () => this.device;
-
-  private emitReady = () => {
-    setTimeout(() => {
-      this.emit("ready", this.device);
-    });
-  };
 }
 
 export const messageToBytes = (msg: MidiMessageEvent): number[] => {

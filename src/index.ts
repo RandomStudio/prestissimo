@@ -42,8 +42,15 @@ export class BaseMidiDevice extends EventEmitter {
   public getDevice = () => this.device;
 
   public close = () => {
-    logger.warn("closing MIDI device", this.device);
+    logger.info("closing MIDI device", this.device);
     this.midi.closePort();
+  };
+
+  protected emitReady = () => {
+    logger.info("opened MIDI device", this.device);
+    setTimeout(() => {
+      this.emit("ready", this.device);
+    });
   };
 }
 

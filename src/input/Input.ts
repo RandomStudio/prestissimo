@@ -64,10 +64,4 @@ export class Input extends BaseMidiDevice {
 
     this.emit(e.name, e.payload);
   };
-
-  private emitReady = () => {
-    setTimeout(() => {
-      this.emit("ready", this.device);
-    });
-  };
 }
